@@ -9,6 +9,7 @@ Git almacena información en 4 áres, Working Area, Index, Repository y el Stash
 
 Es importante preguntarse como los comandos de git mueven información entre estas áreas y también que comandos hacen cambios en el Repository puesto que es la área más importante de las cuatro.
 
+## Repository
 
 Extendiendo un poco la información sobre Repository, en el directorio de trabajo se puede encontrar un directorio oculto llamado `.git`.  En este directorio, git almacenará toda la información necesaria para trabajar. Más concretamete hay un directorio llamado `objects` bastante interesante.
 
