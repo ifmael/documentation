@@ -14,7 +14,25 @@ Extendiendo un poco la información sobre Repository, en el directorio de trabaj
 
 Hay diferentes tipos de objetos así algunos de ellos representan el contenido de un fichero en un punto específico en el la historia del proyecto, se denominan `blob`.  Otros objetos llamados `tree` representan  directorios en el proyecto y también hay `commit`. Todos estos objetos son inmutables, se puede crear o borrar pero nunca van a cambiar. Estos objetos están linkador para construir la historia del proyecto. 
 
-![alt text](./images/git-history.png "Git history")
+![Git history](./images/git-history.png"Git history")
 
 
-Los commit son como una instantánea en el tiempo.
+Los commit son como una instantánea en el tiempo. Cada uno de ellos apunta a un commit padre
+
+![Commit tree](./images/commit-tree.png"Commit tree")
+
+Así cuando estamos apuntan a un commit en particular, indirectamente tenemos la referencia del resto. 
+
+![Commit Reference](./images/commit-reference.png"Commit Reference")
+
+Todos estos commit juntos, conforma un una instánea en el tiempo. La referencia a este commit es una entidad importante, llamada `branch`. Básicamente una rama es un punto de entrada al historial de commit. Por supuesto se pueden tener múltiples `branches`
+
+![Branch reference](./images/branch-reference.png"Branch reference")
+
+Un mismo commit puede ser compartido por 2 `branches` distintas.
+
+Hay un punto especial llamado `HEAD` y solo hay una. Es una referencia a una `branch`, y es la `branch` actual. Y ya que las ramas apunta a `commit`, el `HEAD` indirectamente está apuntando a un `commit`. El `HEAD` se puede ir moviendo a diferentes `branches` para apuntar a diferentes `commits`.
+
+Se puede desear borrar una `branch`, dando lugar a que algunos `commits` ya no se puedan alcanzar. Cuando sucede esto, el recolector de basura de git elimina estos `commits`.
+
+![BCommits unreacheable](./images/commits-unreacheable.png"Commits unreacheable")
