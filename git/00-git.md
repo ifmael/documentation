@@ -36,7 +36,7 @@ Hay un punto especial llamado `HEAD` y solo hay una. Es una referencia a una `br
 
 Se puede desear borrar una `branch`, dando lugar a que algunos `commits` ya no se puedan alcanzar. Cuando sucede esto, el recolector de basura de git elimina estos `commits`.
 
-![BCommits unreacheable](./images/commits-unreacheable.png" Commits unreacheable")
+![BCommits unreacheable](./images/commits-unreacheable.png "Commits unreacheable")
 
 ## Index
 
