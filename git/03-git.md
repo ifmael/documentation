@@ -4,9 +4,9 @@
 
 Es la cuarta área que nos proporciona git. Todos los comando visto hasta ahora no tienen ningún efecto sobre este área. Solo hay un comando que pone datos en esta área `git stath`. La información en el Stath no cambia al menos que se haga explícitamente.
 
-Se está trabajando en un proyecto en el que se  tienen ficheros en el Working Area e Index que ha sido modificados con respecto a los ficheros que se contiene en el Repository. Por algún tipo de necesidad tenemos que realizar cualquier otra tarea en nuestro prouyecto y no queremos perder los cambios realizados, pero tampoco se quiere realizar commit sobre los cambios que tenemos ya realizados porque aún no se ha terminado de realizar la tarea. Pues el Stash nos propociona  un  area donde depositar estos cambios para luego pder recuperarlos.
+Se está trabajando en un proyecto en el que se  tienen ficheros en el Working Area e Index que ha sido modificados con respecto a los ficheros que se contiene en el Repository. Por algún tipo de necesidad tenemos que realizar cualquier otra tarea en nuestro proyecto y no queremos perder los cambios realizados, pero tampoco se quiere realizar commit sobre los cambios que tenemos ya realizados porque aún no se ha terminado de realizar la tarea. Pues el Stash nos propociona  un  area donde depositar estos cambios para luego poder recuperarlos.
 
-Por meedio del comando `git stash save`  o simplemente `git stash`, se copian los datos que se tienen en el Working Area e index en el Stash,, y posteriormente hace un checkout del commit actual para que esten las áreas Working Area, Index y Repository alineadas. Si se añade la opción `--include-untracked`
+Por medio del comando `git stash save`  o simplemente `git stash`, se copian los datos que se tienen en el Working Area e index en el Stash,j y posteriormente hace un checkout del commit actual para que esten las áreas Working Area, Index y Repository alineadas. Si se añade la opción `--include-untracked`
 
  Ahora para leer las entradas que se tienen en el Stash se utiliza `git stash list`. Aparecerá una entrada por cada vez que hemos puesto algo en esta área. Cada entrada en la lista esta compuesta por:
 
