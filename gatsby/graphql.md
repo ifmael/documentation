@@ -66,11 +66,13 @@ Por lo normal el formato de los datos que se obtienen de los plugins de datos no
 ```
 
 
-## Crear nuevos páginas y path
+## Crear nuevos páginas y slug(algo paracido a path)
 
-Normalmente  los datos proporcionan un un path para el contenido. Por ejemplo cuando se trabaja con CMS no es necesario proporcionar path directamente como con markdown.
+### Crear slug
 
-Para crear páginas a partir de markdown, es necesario utilizar las APIs `onCreateNode` y `createPages`.  Para implementar la API, se exporta una función desde `gatsby-node.js`.
+Normalmente los datos proporcionan un slug para el contenido. Por ejemplo cuando se trabaja con CMS no es necesario proporcionar path directamente como con markdown.
+
+Para crear páginas a partir de markdown, es necesario utilizar las APIs `onCreateNode` y `createPages`.  Para implementar la API, se exporta el nombre de la la funcióna implementar desde `gatsby-node.js`.
 
 ```javascript
 exports.onCreateNode = ({ node }) => {
@@ -103,7 +105,7 @@ exports.onCreateNode = ({ node, getNode }) => {
 }
 ```
 
-Ahora se va a crear los path. Nos vamos a valer del plugin `gatsby-source-filesystem`
+El plugin `gatsby-source-filesystem` puede facilitar lo anteriormente  hecho.
 
 ```javascript
 const { createFilePath} = require(`gatsby-source-filesystem`)
@@ -115,11 +117,126 @@ export.onCreate = ({node, getNode}) => {
 }
 ```
 
-Por último se va a crear un nodo en `MarkdownRemark`. Añadiendo estos nodos, posteriormente se podrá obtener información por medio de graphQL
+La función `createFilePath` se encarga de encontrar el nodo padre para crear el path.
 
+Ahora ya se puede crear un nuevo slug  en los nodos `MarkdownRemark`. De esta manera cualquier información que se añada a los nodos esta disponible para despues consultar por medio de GraphQL.
 
+Para obtener el slug, se utiliza la función `createNodeField`. Esta función permite crear un campo adicional al nodo creado. Solo el creador original del nodo puede modificar directamente el nodo.
 
+```javascript
+const { createFilePath } = require(`gatsby-source-filesystem`)
 
+exports.onCreateNode = ({ node, getNode, actions}) => {
+  if (node.internal.type === 'MarkdownRemark') {
+    const { createNodeField } = actions
+    const slug = createFilePath({ node, getNode, basePath: `markdown` })
+    createNodeField({
+      node,
+      name: `slug`,
+      value: slug
+    })
+  }
+}
+```
+
+Ahora cuando se realiza una consulta a GraphQL se puede obtener el nombre del slug creado
+
+```json
+{
+  allMarkdownRemark {
+    edges {
+      node {
+        fields {
+          slug
+        }
+      }
+    }
+  }
+}
+```
+
+### Crear páginas
+
+Para crear páginas programativamente se tiene que :
+
+* Consultar los datos con GrapQL
+* Mapear los resultados en páginas.
+
+Para realizar el primer paseo se tiene que añadir en el fichero `gatsby-node.js` lo siguiente para poder crear las págins. Se utiliza la función `graphql` para consultar los slug que se han creado con anterioridad.
+
+```javascript
+exports.createPages = ({ graphql, actions}) => {
+  return graphql(`
+  {
+    allMarkdownRemark {
+      edges {
+        node{
+          fields{
+            slug
+          }
+        }
+      }
+    }
+  }
+  `).then( result => {
+    console.log(JSON.stringify(result, null, 4))
+  });
+}
+```
+
+Con esto se añade uuna implementación para la API `createPages` la cúal es llamada por gatsby para que los plugins puedn añadir páginas.
+
+Se necesita proporcionar un template componente al slug para crear la página.
+
+```javascript
+const path = require('path');
+const { createFilePath } = require(`gatsby-source-filesystem`)
+
+exports.onCreateNode = ({ node, getNode, actions}) => {
+  if (node.internal.type === 'MarkdownRemark') {
+    const { createNodeField } = actions
+    const slug = createFilePath({ node, getNode, basePath: `markdown` })
+    createNodeField({
+      node,
+      name: `slug`,
+      value: slug
+    })
+  }
+}
+
+exports.createPages = ({ graphql, actions }) => {
+  const { createPage } = actions
+  return graphql(`
+    {
+      allMarkdownRemark {
+        edges {
+          node {
+            fields {
+              slug
+            }
+          }
+        }
+      }
+    }
+  `).then(result => {
+    result.data.allMarkdownRemark.edges.forEach(({ node }) => {
+      createPage({
+        path: node.fields.slug,
+        component: path.resolve(`./src/components/layout.js`),
+        context: {
+          slug: node.fields.slug,
+        },
+      }) 
+    })
+  })
+}
+```
+
+El siguiente paso es recoger los datos de nuestros ficheros markdown. Para ello se tiene que modificar el template.
+
+```javascript
+
+```
 
 ## SiteMetaData
 
@@ -160,7 +277,9 @@ export const query = graphql`
         }
       }
   }`;
-``` 
+```
+
+
 
 ## StaticQuery
 
