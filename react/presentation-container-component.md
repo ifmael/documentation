@@ -3,23 +3,71 @@
 Los componentes de presentación tiene las siguientes características:
 
 * Lo importante es como se muestrán las cosas.
-* Pueden contener a otros componentes de presentación o a compoentes contenedores, y normalmente tiene algo de lenguaje de marcado o estilos propios.
+* Pueden contener a otros componentes de presentación o a componentes contenedores, y normalmente tiene algo de lenguaje de marcado o estilos propios.
 * Permiten la contención de `this.props.children`
 * No tienen depencias en el resto de la aplicación como pueden ser Redux.
-* No especiífica como los datos son cargados o se cambian.
+* No especifica como los datos son cargados o se cambian.
 * Recibe datos y callback por medio de props.
 * Son escritos como componentes funcionales al menos que se necesite estado,  hook del ciclo de vida
 * Por ejemplo puede ser : Page, SideBar, Story, UserInfo,List.
+
+```javascript
+//defining the component as a React Component
+class Image extends Component {
+   render() {
+      return <img src={this.props.image} />;
+   }
+}
+export default Image
+
+//defining the component as a constant
+const Image = props => (
+   <img src={props.image} />
+)
+export default Image
+```
 
 
 Los componenentes contenedores:
 
 * Se preocupan de como funcionan las cosas
-* Pueden contener a otros componentes de presentación o a compoentes contenedores,y normalmente no tienen algo de lenguaje de marcado y nunca estilos propios.
+* Pueden contener a otros componentes de presentación o a componentes contenedores,y normalmente no tienen algo de lenguaje de marcado y nunca estilos propios.
 * Proporcionan información y comportamiento para los componentes de presentación o otros componentes contenedores.
 * Llaman a las acciones de Redux.
 * Suelen tener estado ya que tienden a servir como fuente de datos.
 * Ejemplos: UserPage, FollowerSideBar,StoryContainer, FollowedUserList
+
+Un ejemplo:
+
+```javascript
+class Collage extends Component {
+   constructor(props) {
+      super(props);
+      
+      this.state = {
+         images: []
+      };
+   }
+
+   componentDidMount() {
+      fetch('/api/current_user/image_list')
+         .then(response => response.json())
+         .then(images => this.setState({images}));
+   }
+
+   render() {
+      return (
+         <div className="image-list">
+            {this.state.images.map(image => {
+               <div className="image">
+                  <img src={book.image_url} />
+               </div>
+            })}
+         </div>
+      )
+   }
+}
+```
 
 Los beneficios de este enfoque son:
 
@@ -38,7 +86,7 @@ https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0
 
 #######################################
 
-Tanto los componentes de presentación como los componentes contenedores conforman el arbol de componentes de React. Es necesario que unos componentes tengan la responsabilidad de hacer las cosas, y otros componentes de dibujar la información actual. Donde los componentes de presentación no manejan estados los componentes contenedores lo hacen. Donde los componentes de presentación normalmente usan hijos en la jerarquía de componentes de la app,  los componentes contenedores son normalmente los padres de los componentes de representación.
+Tanto los componentes de presentación como los componentes contenedores conforman el árbol de componentes de React. Es necesario que unos componentes tengan la responsabilidad de hacer las cosas, y otros componentes de dibujar la información actual. Donde los componentes de presentación no manejan estados los componentes contenedores lo hacen. Donde los componentes de presentación normalmente son hijos en la jerarquía de componentes de la app,  los componentes contenedores son normalmente los padres de los componentes de representación.
 
 
 ## Que son los componentes contedores?
@@ -104,4 +152,9 @@ const Image = props => (
 export default Image
 ```
 
-Con los componentes de presentación se obtiene la opción de definirlos como compoentes react o como funciones. Definiendolos como funciones ayuda a eliminar dependencias y líneas de código.
+Con los componentes de presentación se obtiene la opción de definirlos como compoentes react o como funciones. Definiendolos como funciones ayuda a eliminar dependencias y líneas de código.`
+
+
+
+
+https://medium.com/@yassimortensen/container-vs-presentational-components-in-react-8eea956e1cea
